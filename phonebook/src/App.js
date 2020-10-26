@@ -6,14 +6,21 @@ const App = () => {
     { name: 'Arto Hellas' }
   ]) 
   const [ newName, setNewName ] = useState('')
-
   const addName=(event)=>{
     event.preventDefault()
-   
-    const newNameObject={
-      name: newName
+    const res = persons.find((n)=>n.name===newName)
+    if(res===undefined){
+      console.log("runing inse if")
+      const newNameObject={
+        name: newName
+      }
+      setPersons(persons.concat(newNameObject))
     }
-    setPersons(persons.concat(newNameObject))
+    else{
+      console.log("runing inse else")
+      alert(`${newName} already in the phonebook`)
+    }
+    
   }
 
   const handleNameChange=(event)=>{
