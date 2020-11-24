@@ -1,10 +1,10 @@
 import React from 'react'
 
-const Names=(props)=>{
+const Names = ({name, number, handleDelete, iD}) =>{
     return(
-    <p>{props.name} {props.number} </p>
-        
+        <div>
+            {name} {number} <button onClick={()=>handleDelete(iD, name)}>Delete</button>
+        </div>
     )
 }
-
 export default Names

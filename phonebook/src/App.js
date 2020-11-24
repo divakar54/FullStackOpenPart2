@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
-import axios from 'axios'
+import comObject from './services/comms'
 
 const App = () => {
 
@@ -13,8 +12,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   useEffect(()=>{
-    axios
-    .get('http://localhost:3001/persons')
+    comObject
+    .getAll()
     .then(response=>{
       setPersons(response.data)
     })
@@ -24,15 +23,17 @@ const App = () => {
     event.preventDefault()
     const res = persons.find((n)=>n.name===newName)
     if(res===undefined){
-      console.log("running inside if")
       const newNameObject={
         name: newName,
         number: newNumber
       }
-      setPersons(persons.concat(newNameObject))
+      comObject
+          .postAll(newNameObject)
+          .then(response => {
+            setPersons(persons.concat(response.data))
+          })
     }
     else{
-      console.log("running inside else")
       alert(`${newName} already in the phonebook`)
     }
     
@@ -45,8 +46,16 @@ const App = () => {
   const handleNumberChange=(event)=>{
     setNewNumber(event.target.value)
   }
-
-  
+  const deletePerson = (id, name)=>{
+        if(window.confirm(`Delete ${name}?`)){
+          comObject
+                  .removeAll(id)
+                  .then(()=>{
+                    setPersons(persons.filter(p => p.id!==id))
+                    console.log(newName)
+                  })
+        }
+  }
   return (
     <div>
       <h2>Phonebook</h2>
@@ -59,7 +68,7 @@ const App = () => {
                     handleNumberChange={handleNumberChange} 
         />
       <h3>Numbers</h3>
-        <Person persons={persons} />
+        <Person persons={persons} removePerson={deletePerson}/>
     </div>
   )
 }

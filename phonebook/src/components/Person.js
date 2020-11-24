@@ -1,9 +1,9 @@
 import React from 'react'
 import Names from './Names'
-const Person =(props)=>{
+const Person =({persons, removePerson})=>{
     return(
         <div>
-          {props.persons.map( (n) => <Names key={n.name} name={n.name} number={n.number}/>)}
+          {persons.map((n) => <Names key={n.id} iD={n.id} name={n.name} number={n.number} handleDelete={removePerson}/>)}
         </div>
     )
 }
